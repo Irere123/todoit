@@ -1,15 +1,36 @@
 import fastify from "fastify";
 import { PrismaClient } from "@prisma/client";
 import mercurius from "mercurius";
+import passport from "@fastify/passport";
+import secureSession from "@fastify/session";
+import cookie from "@fastify/cookie";
+import dotenv from "dotenv";
+import fastifyPassport from "@fastify/passport";
 
 import { schema } from "./schema";
 import { isProd } from "./constants";
 import { auth } from "./routes/auth";
 
 const prisma = new PrismaClient();
+dotenv.config();
 
 async function main() {
   const app = fastify();
+
+  app.register(cookie);
+  app.register(secureSession, {
+    secret: process.env.SESSION_SECRET!,
+  });
+  app.register(passport.initialize());
+  app.register(passport.secureSession());
+
+  fastifyPassport.registerUserDeserializer(async (user, _req) => {
+    return user;
+  });
+
+  fastifyPassport.registerUserSerializer(async (user, _req) => {
+    return user;
+  });
 
   app.get("/", async (_, rep) => {
     const users = await prisma.user.findMany();
