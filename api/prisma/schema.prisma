@@ -11,10 +11,11 @@ datasource db {
 }
 
 model User {
-  id                String @id @default(uuid())
+  id                String  @id @default(uuid())
   username          String
   avatarUrl         String
   email             String
+  password          String?
   googleAccessToken String
   googleId          String
 
