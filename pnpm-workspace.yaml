@@ -1,0 +1,7 @@
+packages:
+  # executable/lauchable applications
+  - "apps/*"
+  # all packages subdirs
+  - "packages/*"
+  # api for database interactions
+  - "api/"
