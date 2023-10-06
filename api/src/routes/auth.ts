@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import passport from "@fastify/passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { PrismaClient } from "@prisma/client";
+import { apiUrl } from "../constants";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +13,7 @@ export async function auth(fastify: FastifyInstance) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID!,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        callbackURL: "http://localhost:4000/auth/google/callback",
+        callbackURL: `${apiUrl}/auth/google/callback`,
       },
       async function (accessToken, _refreshToken, profile, cb) {
         let user: any = await prisma.user.findFirst({
