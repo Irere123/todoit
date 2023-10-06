@@ -2,7 +2,9 @@ import { FastifyInstance } from "fastify";
 import passport from "@fastify/passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { PrismaClient } from "@prisma/client";
-import { apiUrl } from "../constants";
+import { sign } from "jsonwebtoken";
+
+import { apiUrl, webUrl } from "../constants";
 
 const prisma = new PrismaClient();
 
@@ -49,9 +51,10 @@ export async function auth(fastify: FastifyInstance) {
         scope: ["profile email"],
       }),
     },
-    async (req, res) => {
-      console.log(req.user);
-      res.redirect("/");
+    async (req: any, res) => {
+      const userId = req.user.id;
+      const token = sign(userId, process.env.TOKEN_SECRET!);
+      res.redirect(`${webUrl}?token=${token}`);
     }
   );
 }
