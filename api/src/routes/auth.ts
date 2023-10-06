@@ -11,15 +11,25 @@ export async function auth(fastify: FastifyInstance) {
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_ID!,
-        callbackURL: "http://locahost:4000/auth/google/callback",
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        callbackURL: "http://localhost:4000/auth/google/callback",
       },
-      async function (_accessToken, _refreshToken, profile, cb) {
+      async function (accessToken, _refreshToken, profile, cb) {
         let user: any = await prisma.user.findFirst({
           where: { googleId: profile.id },
         });
 
-        console.log(profile);
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              avatarUrl: profile.photos![0].value,
+              email: profile.emails![0].value,
+              username: profile.displayName.toLowerCase().split(" ").join("_"),
+              googleId: profile.id,
+              googleAccessToken: accessToken,
+            },
+          });
+        }
 
         return cb(null, user);
       }
@@ -28,13 +38,18 @@ export async function auth(fastify: FastifyInstance) {
 
   fastify.get(
     "/google",
-    passport.authenticate("google", { scope: ["profile"] })
+    passport.authenticate("google", { scope: ["profile email"] })
   );
 
   fastify.get(
     "/google/callback",
-    { preValidation: passport.authenticate("google", { scope: ["profile"] }) },
-    async (_req, res) => {
+    {
+      preValidation: passport.authenticate("google", {
+        scope: ["profile email"],
+      }),
+    },
+    async (req, res) => {
+      console.log(req.user);
       res.redirect("/");
     }
   );

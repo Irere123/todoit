@@ -15,14 +15,13 @@ const prisma = new PrismaClient();
 dotenv.config();
 
 async function main() {
-  const app = fastify();
+  const app = fastify({ logger: true });
 
-  app.register(cookie);
-  app.register(secureSession, {
-    secret: process.env.SESSION_SECRET!,
-  });
-  app.register(passport.initialize());
-  app.register(passport.secureSession());
+  app
+    .register(cookie)
+    .register(secureSession, { secret: process.env.SESSION_SECRET! })
+    .register(passport.initialize())
+    .register(passport.secureSession());
 
   fastifyPassport.registerUserDeserializer(async (user, _req) => {
     return user;
@@ -38,7 +37,10 @@ async function main() {
     rep.send(users);
   });
 
-  app.register(mercurius, { schema, graphiql: !isProd });
+  app.register(mercurius, {
+    schema,
+    graphiql: !isProd,
+  });
   app.register(auth, { prefix: "/auth" });
 
   await app.listen({ port: 4000 }).then((l) => {
