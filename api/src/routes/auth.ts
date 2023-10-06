@@ -53,7 +53,7 @@ export async function auth(fastify: FastifyInstance) {
     },
     async (req: any, res) => {
       const userId = req.user.id;
-      const token = sign(userId, process.env.TOKEN_SECRET!);
+      const token = sign({ userId }, process.env.TOKEN_SECRET!);
       res.redirect(`${webUrl}?token=${token}`);
     }
   );

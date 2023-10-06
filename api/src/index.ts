@@ -5,6 +5,7 @@ import passport from "@fastify/passport";
 import secureSession from "@fastify/session";
 import cookie from "@fastify/cookie";
 import dotenv from "dotenv";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import fastifyPassport from "@fastify/passport";
 
 import { schema } from "./schema";
@@ -15,7 +16,7 @@ const prisma = new PrismaClient();
 dotenv.config();
 
 async function main() {
-  const app = fastify({ logger: true });
+  const app = fastify();
 
   app
     .register(cookie)
@@ -40,6 +41,25 @@ async function main() {
   app.register(mercurius, {
     schema,
     graphiql: !isProd,
+    context: async (req, _rep) => {
+      const header = req.headers["authorization"];
+      let user = null;
+      if (header !== null) {
+        const token = header?.split(" ")[1];
+        const tokenPayload = jwt.verify(
+          token!,
+          process.env.TOKEN_SECRET!
+        ) as JwtPayload;
+
+        user = await prisma.user.findFirst({
+          where: { id: tokenPayload.userId },
+        });
+      }
+      return {
+        user,
+        prisma,
+      };
+    },
   });
   app.register(auth, { prefix: "/auth" });
 

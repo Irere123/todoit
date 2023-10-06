@@ -1,3 +1,5 @@
+import { GraphQLContext } from "../context";
+
 export const typeDefs = /* GraphQL */ `
   type User {
     id: ID!
@@ -8,6 +10,7 @@ export const typeDefs = /* GraphQL */ `
 
   type Query {
     getUsers: [User]
+    me: User
   }
 
   input CreateUserInput {
@@ -26,6 +29,13 @@ export const typeDefs = /* GraphQL */ `
 
 export const resolvers = {
   Query: {
+    me: (_parent: unknown, _args: {}, ctx: GraphQLContext) => {
+      if (!ctx.user) {
+        return null;
+      }
+
+      return ctx.user;
+    },
     getUsers: () => [],
   },
   Mutation: {
