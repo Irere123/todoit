@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 const colorStyles = {
-  primary: "bg-emerald-600 text-white rounded-md",
+  primary: "bg-emerald-600 shadow-md text-white rounded-md",
   secondary: "",
 };
 
@@ -13,13 +13,15 @@ const sizeStyles = {
   lg: "",
 };
 
-export interface ButtonProps {
+export type ButtonProps = DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLElement>,
+  HTMLButtonElement
+> & {
   children: React.ReactNode;
   color?: keyof typeof colorStyles;
   icon?: React.ReactNode;
   size?: keyof typeof sizeStyles;
-  onClick?: () => void;
-}
+};
 
 export const Button: React.FC<ButtonProps> = ({
   children,
@@ -27,11 +29,13 @@ export const Button: React.FC<ButtonProps> = ({
   size = "md",
   icon,
   onClick,
+  ...props
 }) => {
   return (
     <button
       onClick={onClick}
       className={`flex gap-4 items-center ${colorStyles[color]} ${sizeStyles[size]}`}
+      {...props}
     >
       {icon ? <span>{icon}</span> : null}
       {children}

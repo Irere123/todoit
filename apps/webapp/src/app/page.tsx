@@ -12,7 +12,12 @@ export default function Home() {
   return (
     <main className="flex flex-col gap-6 justify-center items-center w-full h-full">
       <h1 className="text-3xl font-bold">todoit</h1>
-      <Button onClick={() => {}} icon={<GoogleIcon />}>
+      <Button
+        onClick={() => {
+          window.location.href = "http://localhost:4000/auth/google";
+        }}
+        icon={<GoogleIcon />}
+      >
         Login with Google
       </Button>
     </main>
