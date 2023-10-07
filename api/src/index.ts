@@ -5,6 +5,7 @@ import passport from "@fastify/passport";
 import secureSession from "@fastify/session";
 import cookie from "@fastify/cookie";
 import dotenv from "dotenv";
+import cors from "@fastify/cors";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import fastifyPassport from "@fastify/passport";
 
@@ -22,7 +23,10 @@ async function main() {
     .register(cookie)
     .register(secureSession, { secret: process.env.SESSION_SECRET! })
     .register(passport.initialize())
-    .register(passport.secureSession());
+    .register(passport.secureSession())
+    .register(cors, {
+      origin: "*",
+    });
 
   fastifyPassport.registerUserDeserializer(async (user, _req) => {
     return user;
