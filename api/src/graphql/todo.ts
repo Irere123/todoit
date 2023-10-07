@@ -1,6 +1,8 @@
 import { GraphQLError } from "graphql";
 import { GraphQLContext } from "../context";
 
+const { withFilter } = require("mercurius");
+
 export const typeDefs = /* GraphQL */ `
   type Todo {
     id: ID
@@ -16,6 +18,10 @@ export const typeDefs = /* GraphQL */ `
 
   type Mutation {
     createTodo(text: String): Todo!
+  }
+
+  type Subscription {
+    todoAdded(creatorId: ID!): Todo!
   }
 `;
 
@@ -39,9 +45,27 @@ export const resolvers = {
       if (!ctx.user) {
         throw new GraphQLError("Not authenticated");
       }
-      return await ctx.prisma.todo.create({
+      const todo = await ctx.prisma.todo.create({
         data: { text: args.text, creatorId: ctx.user.id },
       });
+
+      ctx.pubsub.publish({
+        topic: "TODO_ADDED",
+        payload: { todoAdded: todo },
+      });
+
+      return todo;
+    },
+  },
+
+  Subscription: {
+    todoAdded: {
+      subscribe: withFilter(
+        (_root: unknown, _args: {}, { pubsub }: GraphQLContext) =>
+          pubsub.subscribe("TODO_ADDED"),
+        (payload: any, args: { creatorId: string }) =>
+          payload.todoAdded.creatorId === args.creatorId
+      ),
     },
   },
 };
