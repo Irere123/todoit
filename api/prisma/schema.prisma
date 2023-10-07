@@ -21,4 +21,20 @@ model User {
 
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt
+
+  @@index([email, googleId, username, id])
+  @@map("users")
+}
+
+model Todo {
+  id          String  @id @default(uuid())
+  text        String
+  completed   Boolean @default(false)
+  description String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt
+
+  @@index([id, completed])
+  @@map("todos")
 }

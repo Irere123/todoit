@@ -1,11 +1,15 @@
 import { GraphQLContext } from "../context";
 
 export const typeDefs = /* GraphQL */ `
+  scalar Datetime
+
   type User {
     id: ID!
     username: String!
     avatarUrl: String!
     email: String!
+    createdAt: Datetime
+    updatedAt: Datetime
   }
 
   type Query {
