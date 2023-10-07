@@ -21,6 +21,7 @@ model User {
 
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt
+  todos     Todo[]
 
   @@index([email, googleId, username, id])
   @@map("users")
@@ -31,6 +32,8 @@ model Todo {
   text        String
   completed   Boolean @default(false)
   description String?
+  creator     User    @relation(fields: [creatorId], references: [id])
+  creatorId   String
 
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt
