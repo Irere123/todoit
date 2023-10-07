@@ -1,3 +1,4 @@
+import { User } from "@/entities/user";
 import { getMe } from "@/graphql/user";
 import React, { createContext } from "react";
 import { useQuery } from "react-query";
@@ -5,12 +6,6 @@ import { useQuery } from "react-query";
 export type AuthCtx = {
   user: User | null;
   updateUser: (user: User | null) => void;
-};
-
-type User = {
-  email: string;
-  username: string;
-  id: string;
 };
 
 export const AuthContext = createContext<AuthCtx>({

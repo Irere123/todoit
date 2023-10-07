@@ -1,8 +1,11 @@
 "use client";
 import ProtectedPage from "@/components/ProtectedPage";
-import React, { useState } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
+import Image from "next/image";
+import React, { useContext, useState } from "react";
 
 export default function DashboardPage() {
+  const { user } = useContext(AuthContext);
   const [todo, setTodo] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -11,7 +14,17 @@ export default function DashboardPage() {
 
   return (
     <ProtectedPage>
-      <main className="flex justify-center items-center w-full h-full">
+      <main className="flex flex-col p-3 gap-5 mx-auto">
+        <div className="flex gap-5">
+          <Image
+            src={user!.avatarUrl}
+            alt={user?.username!}
+            width={50}
+            height={50}
+            className="rounded-full  border-4 border-stone-400"
+          />
+          <p>{user?.username}</p>
+        </div>
         <form onSubmit={handleSubmit} className="flex gap-2 ">
           <input
             type="text"

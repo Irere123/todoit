@@ -8,6 +8,9 @@ const GET_ME_QUERY = gql`
       id
       username
       email
+      avatarUrl
+      updatedAt
+      createdAt
     }
   }
 `;
