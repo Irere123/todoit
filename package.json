@@ -1,9 +1,11 @@
 {
-  "dependencies": {
-    "turbo": "^1.10.15"
-  },
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build"
+    "dev": "turbo dev --parallel",
+    "build": "turbo build",
+    "lint": "turbo lint"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3",
+    "turbo": "^1.10.15"
   }
 }
