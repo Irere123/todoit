@@ -1,3 +1,5 @@
+"use client";
+
 import { User } from "@/entities/user";
 import { getMe } from "@/graphql/user";
 import React, { createContext } from "react";

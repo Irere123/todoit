@@ -1,3 +1,5 @@
+"use client";
+
 import { useTokenStore } from "@/stores/useTokenStore";
 import type { Client } from "graphql-ws";
 import React, { useEffect, useMemo, useState } from "react";

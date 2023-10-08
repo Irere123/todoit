@@ -45,7 +45,7 @@ async function main() {
   app.register(mercurius, {
     schema,
     graphiql: !isProd,
-    subscription: true,
+    subscription: { onConnect: () => console.log("connected to ws") },
     context: async (req, _rep) => {
       const header = req.headers["authorization"];
       let user = null;
