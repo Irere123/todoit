@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import ProtectedPage from "../components/ProtectedPage";
+import { AuthContext } from "../contexts/AuthContext";
 
 interface DashboardProps {}
 
 export const Dashboard: React.FC<DashboardProps> = () => {
+  const { user } = useContext(AuthContext);
   return (
     <ProtectedPage>
-      <div>
-        <p>Hello dashboard</p>
-      </div>
+      <main>
+        <img src={user?.avatarUrl} alt={user?.username} />
+        <p>{user?.username}</p>
+      </main>
     </ProtectedPage>
   );
 };
