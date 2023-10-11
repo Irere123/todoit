@@ -19,9 +19,11 @@ model User {
   googleAccessToken String
   googleId          String
 
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now()) @db.Timestamptz()
+  updatedAt DateTime   @updatedAt
   todos     Todo[]
+  tasks     Task[]
+  reminders Reminder[]
 
   @@index([email, googleId, username, id])
   @@map("users")
@@ -38,6 +40,37 @@ model Todo {
   createdAt DateTime @default(now()) @db.Timestamptz()
   updatedAt DateTime @updatedAt
 
-  @@index([id, completed])
+  @@index([id, completed, text])
   @@map("todos")
+}
+
+model Task {
+  id          String @id @default(uuid())
+  text        String
+  status      String
+  description String
+  creatorId   String
+  creator     User   @relation(fields: [creatorId], references: [id])
+
+  creatorAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt
+
+  @@index([id, status, text, creatorId])
+  @@map("tasks")
+}
+
+model Reminder {
+  id          String   @id @default(uuid())
+  text        String
+  done        Boolean
+  description String?
+  creatorId   String
+  creator     User     @relation(fields: [creatorId], references: [id])
+  targetTime  DateTime
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt
+
+  @@index([id, text, done, creatorId])
+  @@map("reminders")
 }
