@@ -1,5 +1,6 @@
 import { gql, useQuery } from "urql";
 import React, { createContext } from "react";
+import { User } from "../types/entieties";
 
 const meQuery = gql`
   query {
@@ -13,15 +14,6 @@ const meQuery = gql`
     }
   }
 `;
-
-type User = {
-  id: string;
-  username: string;
-  email: string;
-  avatarUrl: string;
-  createdAt: string;
-  updatedAt: string;
-};
 
 export type AuthCtx = {
   user: User | null;
