@@ -1,6 +1,7 @@
 import { gql, useQuery } from "urql";
 import React, { createContext } from "react";
 import { User } from "../types/entieties";
+import { CenterLoader } from "../components/CenterLoader";
 
 const meQuery = gql`
   query {
@@ -35,7 +36,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   const [{ data, fetching }] = useQuery({ query: meQuery });
 
   if (fetching) {
-    return <div>loading...</div>;
+    return <CenterLoader />;
   }
 
   return (

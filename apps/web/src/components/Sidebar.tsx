@@ -4,8 +4,8 @@ interface SidebarProps {}
 
 export const Sidebar: React.FC<SidebarProps> = () => {
   return (
-    <nav className="flex flex-col h-full  bg-slate-500 rounded-b-md px-4">
+    <div className="flex text-slate-900 flex-col h-full flex-1  bg-slate-100 border-r border-slate-300">
       <h3>Home</h3>
-    </nav>
+    </div>
   );
 };

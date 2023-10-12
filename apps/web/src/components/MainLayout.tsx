@@ -9,12 +9,12 @@ interface MainLayoutProps {
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <ProtectedPage>
-      <div className="flex flex-col w-full h-full  flex-1">
+      <div className="w-full h-full flex">
         <div
           className="relative"
           style={{
             display: "grid",
-            gridTemplateColumns: "200px 1fr",
+            gridTemplateColumns: "300px 1fr",
             columnGap: 60,
           }}
         >
